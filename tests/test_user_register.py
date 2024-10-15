@@ -31,8 +31,8 @@ class TestUserRegister(BaseCase):
 
 
     def test_create_user_without_symbol(self):
-        username = 'test.test.com'
-        data= self.prepare_registration_date(username)
+        email = 'test.test.com'
+        data= self.prepare_registration_date(email)
 
         response = MyRequests.post("/user/", data=data)
         Assertions.assert_code_status(response, 400)
