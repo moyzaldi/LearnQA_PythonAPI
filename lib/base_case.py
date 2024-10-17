@@ -2,6 +2,7 @@ import json.decoder
 from pydoc import importfile
 from requests import Response
 from datetime import datetime
+import random
 
 from datetime import datetime
 
@@ -30,7 +31,7 @@ class BaseCase:
             base_part = "learnga"
             domain = "example.com"
             random_part = datetime.now().strftime("%m%d%Y%H%M%S")
-            email = f"{base_part}{random_part}@{domain}"
+            email = f"{base_part}{random_part}@{domain}"+str(random.randint(1, 9))
         return {
             'password': '123',
             'username': 'learnqa',
