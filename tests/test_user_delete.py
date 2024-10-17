@@ -49,6 +49,7 @@ class TestUserDelete(BaseCase):
         token = self.get_header(response2, 'x-csrf-token')
 
         #DELETE
+
         new_name =  "Changed Name"
         response3 = MyRequests.delete( f"/user/{user_id}",
         headers = {"x-csrf-token": token},
@@ -77,25 +78,26 @@ class TestUserDelete(BaseCase):
         email = register_data['email']
         password = register_data['password']
 
+        # REGISTER_2
+        register_data_2 = self.prepare_registration_date()
+        response2 = MyRequests.post("/user/", data=register_data_2)
+
+        Assertions.assert_code_status(response2, 200)
+        Assertions.assert_json_has_key(response2, "id")
+
+        user_id = self.get_json_value(response2, "id")
+
         # LOGIN
         login_data = {
             'email': email,
             'password': password
         }
-        response2 = MyRequests.post("/user/login", data=login_data)
-        auth_sid = self.get_cookie(response2, 'auth_sid')
-        token = self.get_header(response2, 'x-csrf-token')
+        response3 = MyRequests.post("/user/login", data=login_data)
+        auth_sid = self.get_cookie(response3, 'auth_sid')
+        token = self.get_header(response3, 'x-csrf-token')
 
-        # REGISTER_2
-        register_data_2 = self.prepare_registration_date()
-        response3 = MyRequests.post("/user/", data=register_data_2)
+        # DELETE
 
-        Assertions.assert_code_status(response3, 200)
-        Assertions.assert_json_has_key(response3, "id")
-
-        user_id = self.get_json_value(response3, "id")
-
-        # EDIT
 
         response4 = MyRequests.delete(f"/user/{user_id}",
                                    headers={"x-csrf-token": token},
