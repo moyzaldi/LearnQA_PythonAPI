@@ -2,8 +2,14 @@ import pytest
 from lib.base_case import BaseCase
 from lib.assertions import Assertions
 from lib.my_requests import MyRequests
+import allure
 
+@allure.epic("Deletion cases")
+@allure.issue("DEL-123")
 class TestUserDelete(BaseCase):
+
+    @allure.description("This is a negative test  to delete a system user with the number 1-5")
+    @allure.tag("Negative", "Deletion")
     def test_delete_system_user(self):
         data = {
             'email': 'vinkotov@example.com',
@@ -25,8 +31,8 @@ class TestUserDelete(BaseCase):
         assert response2.content.decode(
             'utf-8') == '{"error":"Please, do not delete test users with ID 1, 2, 3, 4 or 5."}', f"Unexpected content {response2.content}"
 
-
-
+    @allure.tag("Positive",  "Deletion")
+    @allure.description("This test is successfully  deletion of the user himself")
     def test_delete_just_created_user(self):
         # REGISTER1
         register_data =  self.prepare_registration_date()
@@ -66,7 +72,8 @@ class TestUserDelete(BaseCase):
         assert response4.content.decode(
             'utf-8') == 'User not found', f"Unexpected content {response4.content}"
 
-
+    @allure.tag("Negative", "Deletion")
+    @allure.description("This negative test is for trying to delete another user")
     def test_delete_user_with_auth_by_another_user(self):
         # REGISTER_1
         register_data = self.prepare_registration_date()

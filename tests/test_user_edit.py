@@ -3,9 +3,14 @@ from lib.assertions import Assertions
 from lib.base_case import BaseCase
 import random
 
+import allure
 
+@allure.epic("Editing cases")
+@allure.issue("EDIT-123")
 class TestUserEdit(BaseCase):
 
+    @allure.tag("Positive", "Editing")
+    @allure.description("This is a successful  test for a user editing")
     def test_edit_just_created_user(self):
         # REGISTER
         register_data =  self.prepare_registration_date()
@@ -46,6 +51,8 @@ class TestUserEdit(BaseCase):
         Assertions.assert_json_value_by_name (response4, "firstName", new_name, "Wrong name of the user after edit")
 
 
+    @allure.tag("Negative", "Editing")
+    @allure.description("This is a negative test for editing a user without authorization")
     def test_edit_user_without_auth(self):
         user_id = 2
 
@@ -57,7 +64,8 @@ class TestUserEdit(BaseCase):
         assert response.content.decode(
             'utf-8') == '{"error":"Auth token not supplied"}', f"Unexpected content {response.content}"
 
-
+    @allure.tag("Negative", "Editing")
+    @allure.description("This is a negative test for  editing another user")
     def test_edit_user_with_auth_by_another_user(self):
         # REGISTER_1
         register_data = self.prepare_registration_date()
@@ -102,6 +110,8 @@ class TestUserEdit(BaseCase):
         assert response4.content.decode(
             'utf-8') == '{"error":"This user can only edit their own data."}', f"Unexpected content {response4.content}"
 
+    @allure.tag("Negative", "Editing")
+    @allure.description("This is a negative test  for changing an email without @")
     def test_edit_user_email_with_auth_without_symbol(self):
         # REGISTER
         register_data = self.prepare_registration_date()
@@ -136,7 +146,8 @@ class TestUserEdit(BaseCase):
         assert response3.content.decode(
             'utf-8') == '{"error":"Invalid email format"}', f"Unexpected content {response3.content}"
 
-
+    @allure.tag("Negative", "Editing")
+    @allure.description("This is a negative test for a short name change")
     def test_edit_user_firstName_to_short_value_with_auth(self):
         # REGISTER
         register_data = self.prepare_registration_date()
